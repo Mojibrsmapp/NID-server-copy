@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Loader2, Printer, ArrowLeft, RefreshCw, AlertTriangle, Key, Search, User, Clipboard, Edit2, CheckCircle, Info, History, Database, Trash2, Plus, Lock, Check, ShieldAlert, Coins, X, MessageSquare, Users } from "lucide-react";
+import { Loader2, Printer, ArrowLeft, RefreshCw, AlertTriangle, Key, Search, User, Clipboard, Edit2, CheckCircle, Info, History, Database, Trash2, Plus, Lock, Check, ShieldAlert, Coins, X, MessageSquare, Users, Download } from "lucide-react";
 import { mockNidRecords } from "./mockData";
 import { ApiResponse, NidDataInfo } from "./types";
 
@@ -484,6 +484,9 @@ export default function App() {
           setOriginalResponse(bodyObj);
           setReportData(bodyObj["data-Info"]);
           setViewMode("report");
+          setTimeout(() => {
+            window.print();
+          }, 1000);
         } else {
           // If the server succeeded but returned success=false / error
           const errMsg = bodyObj.message || "Invalid query parameters or inactive key.";
@@ -506,6 +509,9 @@ export default function App() {
          setOriginalResponse(sandboxMatch);
          setReportData(sandboxMatch["data-Info"]);
          setViewMode("report");
+         setTimeout(() => {
+           window.print();
+         }, 1000);
       } else {
          setErrorMsg(apiErr.message || "Verification request rejected by NID Server. Please verify NID, DOB and API Key parameters.");
          setShowErrorDialog(true);
@@ -903,7 +909,7 @@ export default function App() {
                           </li>
                           <li className="flex items-center gap-2">
                             <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            পিডিএফ রিপোর্ট প্রিন্ট ও সেভ
+                            পিডিএফ সার্ভার কপি প্রিন্ট ও সেভ
                           </li>
                           <li className="flex items-center gap-2">
                             <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
@@ -2302,8 +2308,8 @@ print_r($balanceData);
               onClick={() => window.print()}
               className="bg-purple-700 hover:bg-purple-800 text-white px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow shadow-purple-200 hover:shadow-purple-300 font-mono tracking-wider cursor-pointer"
             >
-              <Printer size={14} />
-              পিডিএফ প্রিন্ট করুন
+              <Download size={14} />
+              পিডিএফ ডাউনলোড করুন
             </button>
           </div>
 
@@ -2664,7 +2670,7 @@ print_r($balanceData);
 
           <div className="w-full text-center text-xs text-slate-500 py-4 no-print border-t border-slate-200 mt-4 flex items-center justify-center gap-1.5">
             <Clipboard size={14} />
-            <span>এনআইডি পিডিএফ প্রিন্ট সার্ভার সিস্টেম রিপোর্ট মডেল সফলভাবে যাচাই করা হয়েছে।</span>
+            <span>এনআইডি পিডিএফ ডাউনলোড সার্ভার সিস্টেম কপি সফলভাবে যাচাই করা হয়েছে।</span>
           </div>
 
         </div>
