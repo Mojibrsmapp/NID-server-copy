@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script id="patch-fetch-writable">
+      try {
+        let currentFetch = window.fetch;
+        const descriptor = {
+          get() {
+            return currentFetch;
+          },
+          set(val) {
+            currentFetch = val;
+          },
+          configurable: true,
+          enumerable: true
+        };
+
+        // Try to redefine on window directly
+        try {
+          Object.defineProperty(window, 'fetch', descriptor);
+        } catch (e) {
+          console.warn("Could not redefine fetch on window:", e.message);
+        }
+
+        // Try to redefine on Window.prototype
+        try {
+          if (window.Window && window.Window.prototype) {
+            Object.defineProperty(window.Window.prototype, 'fetch', descriptor);
+          }
+        } catch (e) {
+          console.warn("Could not redefine fetch on Window.prototype:", e.message);
+        }
+
+        // Try to redefine on window.__proto__
+        try {
+          if (window.__proto__) {
+            Object.defineProperty(window.__proto__, 'fetch', descriptor);
+          }
+        } catch (e) {
+          console.warn("Could not redefine fetch on window.__proto__:", e.message);
+        }
+      } catch (e) {
+        console.warn("Could not configure fetch writable descriptor:", e);
+      }
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NID Check Portal</title>
+    <!-- Tiro Bangla and Font Awesome references -->
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.1/css/all.css">
+  </head>
+  <body class="bg-slate-50 text-slate-800 antialiased font-sans">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

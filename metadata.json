@@ -1,0 +1,6 @@
+{
+  "name": "NID Check System",
+  "description": "An interactive, beautiful portal for querying the National Identity Card database and generating official print-ready PDF reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
