@@ -66,11 +66,18 @@ async function initDb() {
     // Seed default developer admin keys if table is empty
     const usersCount = await db.execute("SELECT COUNT(*) as count FROM users");
     const count = parseInt(usersCount.rows[0]?.count as string || "0", 10);
+    const initialAdminKey = process.env.ADMIN_KEY || "ADMIN_SECRET_KEY";
     if (count === 0) {
       console.log("Seeding default developer admin API Key in users table...");
       await db.execute({
         sql: "INSERT INTO users (username, api_key, balance_remaining, role, status) VALUES (?, ?, ?, ?, ?)",
-        args: ["system_default", "32vhhhg", 9999, "admin", "active"]
+        args: ["system_default", initialAdminKey, 9999, "admin", "active"]
+      });
+    } else {
+      // Clean up legacy hardcoded key if it remains in existing DB
+      await db.execute({
+        sql: "UPDATE users SET api_key = ? WHERE username = 'system_default' AND api_key = '32vhhhg'",
+        args: [initialAdminKey]
       });
     }
     console.log("Turso database initialized successfully!");

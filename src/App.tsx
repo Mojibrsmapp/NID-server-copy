@@ -7,7 +7,7 @@ export default function App() {
   // Input Form States
   const [nid, setNid] = useState("");
   const [dob, setDob] = useState("");
-  const [apiKey, setApiKey] = useState("32vhhhg");
+  const [apiKey, setApiKey] = useState("");
   
   // Status & Logic States
   const [loading, setLoading] = useState(false);
@@ -96,7 +96,7 @@ export default function App() {
   const [showJsonModal, setShowJsonModal] = useState(false);
 
   // Admin state definitions
-  const [adminKey, setAdminKey] = useState("32vhhhg");
+  const [adminKey, setAdminKey] = useState("");
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [adminUsers, setAdminUsers] = useState<any[]>([]);
   const [adminLogs, setAdminLogs] = useState<any[]>([]);
@@ -1499,7 +1499,7 @@ export default function App() {
                         আমাদের এপিআই গেটওয়ে ব্যবহার করার জন্য একটি বৈধ <code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-[10.5px] font-bold">key (API Key)</code> প্যারামিটার হিসেবে পাঠাতে হবে। এটি কোয়েরি স্ট্রিং বা পাথ ফরম্যাটে পাস করা যেতে পারে।
                       </p>
                       <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-[11px] text-amber-900 font-medium">
-                        👉 <strong>পরামর্শ:</strong> আপনার ব্যক্তিগত এপিআই কীটি হচ্ছে: <code className="bg-amber-100 px-1 py-0.5 rounded font-mono font-bold select-all">{apiKey || "32vhhhg"}</code> (যা উপরে ইনপুট করা আছে)।
+                        👉 <strong>পরামর্শ:</strong> আপনার ব্যক্তিগত এপিআই কীটি হচ্ছে: <code className="bg-amber-100 px-1 py-0.5 rounded font-mono font-bold select-all">{apiKey || "YOUR_API_KEY"}</code> (যা উপরে ইনপুট করা আছে)।
                       </div>
                     </div>
 
