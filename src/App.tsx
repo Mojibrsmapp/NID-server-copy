@@ -486,7 +486,7 @@ export default function App() {
           setReportData(bodyObj["data-Info"]);
           setViewMode("report");
           setTimeout(() => {
-            window.print();
+            handleDownloadPdf();
           }, 1000);
         } else {
           // If the server succeeded but returned success=false / error
@@ -511,7 +511,7 @@ export default function App() {
          setReportData(sandboxMatch["data-Info"]);
          setViewMode("report");
          setTimeout(() => {
-           window.print();
+           handleDownloadPdf();
          }, 1000);
       } else {
          setErrorMsg(apiErr.message || "Verification request rejected by NID Server. Please verify NID, DOB and API Key parameters.");
@@ -538,6 +538,43 @@ export default function App() {
       return `/image?u=${encodeURIComponent(photoVal)}`;
     }
     return photoVal;
+  };
+
+  const handleDownloadPdf = () => {
+    const containerId = reportVersion === "V1" ? "doc-print-v1" : "doc-print-v2";
+    const element = document.getElementById(containerId);
+    if (!element) {
+      alert("ডকুমেন্ট কন্টেইনার পাওয়া যায়নি!");
+      return;
+    }
+
+    const html2pdf = (window as any).html2pdf;
+    if (!html2pdf) {
+      alert("পিডিএফ জেনারেটর এখনও লোড হয়নি, অনুগ্রহ করে কয়েক সেকেন্ড অপেক্ষা করে পুনরায় চেষ্টা করুন।");
+      return;
+    }
+
+    const cleanId = editableFields.nationalId || "report";
+    const opt = {
+      margin: 0,
+      filename: `NID_${cleanId}.pdf`,
+      image: { type: "jpeg", quality: 1.0 },
+      html2canvas: { 
+        scale: 2.5, 
+        useCORS: true, 
+        allowTaint: false,
+        logging: false,
+        letterRendering: true,
+        backgroundColor: "#ffffff"
+      },
+      jsPDF: { 
+        unit: "mm", 
+        format: "a4", 
+        orientation: "portrait" 
+      }
+    };
+
+    html2pdf().set(opt).from(element).save();
   };
 
   const sanitizeJsonForDisplay = (jsonStr: string | undefined): string => {
@@ -2127,7 +2164,7 @@ print_r(json_decode($res, true));`
 
             <button
               id="btn-report-print"
-              onClick={() => window.print()}
+              onClick={handleDownloadPdf}
               className="bg-purple-700 hover:bg-purple-800 text-white px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow shadow-purple-200 hover:shadow-purple-300 font-mono tracking-wider cursor-pointer"
             >
               <Download size={14} />
@@ -2153,7 +2190,7 @@ print_r(json_decode($res, true));`
                 {/* Background Image */}
                 <img 
                   className="bgImg absolute left-0 top-0 w-full h-full select-none pointer-events-none" 
-                  src="https://i.ibb.co.com/xtfMGQQH/vv2.jpg" 
+                  src="/image?u=https://i.ibb.co.com/xtfMGQQH/vv2.jpg" 
                   alt="" 
                   loading="lazy"
                   draggable={false}
@@ -2256,7 +2293,7 @@ print_r(json_decode($res, true));`
                 {/* Reconstructed based on your precise Version 2 inline-style layout */}
                 <img 
                   className="crane absolute left-0 top-0 w-full h-full select-none pointer-events-none" 
-                  src="https://i.ibb.co.com/7d5js9qH/v1.jpg" 
+                  src="/image?u=https://i.ibb.co.com/7d5js9qH/v1.jpg" 
                   alt="" 
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
