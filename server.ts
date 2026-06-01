@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
-import { createClient } from "@libsql/client";
+import { createClient } from "@libsql/client/web";
 
 const app = express();
 const PORT = 3000;
@@ -63,20 +63,41 @@ async function initDb() {
     try { await db.execute("ALTER TABLE query_logs ADD COLUMN photo_url TEXT DEFAULT ''"); } catch (e) {}
     try { await db.execute("ALTER TABLE query_logs ADD COLUMN response_json TEXT DEFAULT ''"); } catch (e) {}
 
-    // Seed default developer admin keys if table is empty
-    const usersCount = await db.execute("SELECT COUNT(*) as count FROM users");
-    const count = parseInt(usersCount.rows[0]?.count as string || "0", 10);
+    // Seed default developer admin keys if they do not exist
     const initialAdminKey = process.env.ADMIN_KEY || "ADMIN_SECRET_KEY";
-    if (count === 0) {
-      console.log("Seeding default developer admin API Key in users table...");
+    
+    // Ensure "32vhhhg" is registered and active in DB as admin
+    const check32vhhhg = await db.execute({
+      sql: "SELECT * FROM users WHERE api_key = ?",
+      args: ["32vhhhg"]
+    });
+    if (check32vhhhg.rows.length === 0) {
+      console.log("Seeding master key 32vhhhg as administrator...");
       await db.execute({
         sql: "INSERT INTO users (username, api_key, balance_remaining, role, status) VALUES (?, ?, ?, ?, ?)",
-        args: ["system_default", initialAdminKey, 9999, "admin", "active"]
+        args: ["system_v1_admin", "32vhhhg", 99999, "admin", "active"]
       });
     } else {
-      // Clean up legacy hardcoded key if it remains in existing DB
       await db.execute({
-        sql: "UPDATE users SET api_key = ? WHERE username = 'system_default' AND api_key = '32vhhhg'",
+        sql: "UPDATE users SET role = 'admin', status = 'active' WHERE api_key = ?",
+        args: ["32vhhhg"]
+      });
+    }
+
+    // Ensure the configured or initial admin key is also registered and active in DB
+    const checkDefaultAdmin = await db.execute({
+      sql: "SELECT * FROM users WHERE api_key = ?",
+      args: [initialAdminKey]
+    });
+    if (checkDefaultAdmin.rows.length === 0) {
+      console.log(`Seeding custom admin key "${initialAdminKey}"...`);
+      await db.execute({
+        sql: "INSERT INTO users (username, api_key, balance_remaining, role, status) VALUES (?, ?, ?, ?, ?)",
+        args: ["system_default", initialAdminKey, 99999, "admin", "active"]
+      });
+    } else {
+      await db.execute({
+        sql: "UPDATE users SET role = 'admin', status = 'active' WHERE api_key = ?",
         args: [initialAdminKey]
       });
     }
