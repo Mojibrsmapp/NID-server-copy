@@ -47,6 +47,7 @@ export default function App() {
   // Tab Management
   const [activeTab, setActiveTab] = useState<"lookup" | "history" | "admin" | "docs" | "pricing">("lookup");
   const [codeSnippetLang, setCodeSnippetLang] = useState<"curl" | "node" | "python" | "php">("curl");
+  const [copiedState, setCopiedState] = useState(false);
   const [calcTokens, setCalcTokens] = useState<number>(150);
 
   // Sync routing path with tab selection
@@ -1438,7 +1439,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Bottom Short Text Button */}
+              {/* Bottom Short Navigation Button for users history tab */}
               <div className="mt-4 flex items-center justify-center gap-4 text-xs font-bold text-blue-900/75 no-print">
                 <button
                   onClick={() => changeTabAndPath("lookup")}
@@ -1456,114 +1457,74 @@ export default function App() {
             <>
               <div id="docs-system-card" className="w-full bg-[#d9effe] rounded-[32px] p-6 md:p-8 shadow-2xl border border-white/50 flex flex-col justify-between self-stretch text-left">
                 <div>
-                  <h2 className="text-[25px] font-bold text-center text-slate-800 mb-2 tracking-wide flex items-center justify-center gap-2">
-                    <Info size={24} className="text-blue-600 animate-pulse" />
-                    এপিআই গেটওয়ে ডকুমেন্টেশন
+                  <h2 className="text-xl font-bold text-center text-slate-800 mb-1 tracking-tight flex items-center justify-center gap-1.5">
+                    <Info size={18} className="text-blue-600" />
+                    সহজ ইন্টিগ্রেশন ডকস
                   </h2>
-                  <p className="text-center text-xs text-slate-600 mb-6 font-semibold">
-                    সহজেই আপনার থার্ড-পার্টি সিস্টেমের সাথে আমাদের এনআইডি ভেরিফিকেশন গেটওয়ে কানেক্ট করুন।
+                  <p className="text-center text-xs text-slate-650 mb-5 font-semibold">
+                    থার্ড-পার্টি অ্যাপসে গেটওয়ে যুক্ত করার সরাসরি নিয়মাবলী।
                   </p>
 
-                  <div className="space-y-6">
-                    
-                    {/* Architectural Flow Diagram */}
-                    <div className="bg-slate-900 text-slate-100 p-5 rounded-2xl border border-slate-700/60 shadow-inner">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-teal-400 block mb-3 font-mono">
-                        ⚙️ Request Routing Architecture Flow
-                      </span>
-                      <div className="grid grid-cols-1 md:grid-cols-5 gap-2 items-center text-center text-[11px] font-bold">
-                        <div className="bg-blue-900/40 border border-blue-500/30 p-2.5 rounded-xl">
-                          <span className="block text-blue-300">Client Request</span>
-                          <span className="text-[9px] text-slate-400 font-mono block mt-0.5">GET /v1</span>
-                        </div>
-                        <div className="text-slate-500 font-mono hidden md:block">➔</div>
-                        <div className="bg-emerald-950/40 border border-emerald-500/30 p-2.5 rounded-xl">
-                          <span className="block text-emerald-300">Gateway Auth</span>
-                          <span className="text-[9px] text-stone-400 block mt-0.5">Verify key, rate, balance</span>
-                        </div>
-                        <div className="text-slate-500 font-mono hidden md:block">➔</div>
-                        <div className="bg-purple-900/40 border border-purple-500/30 p-2.5 rounded-xl">
-                          <span className="block text-purple-300">Secure Upstream</span>
-                          <span className="text-[9px] text-slate-400 font-mono block mt-0.5">Proxy to sv.php (Hidden)</span>
-                        </div>
+                  <div className="space-y-4">
+                    {/* Compact Auth Information */}
+                    <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-200/50 space-y-1 shadow-sm">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                        <Lock size={13} className="text-blue-500" />
+                        অথেনটিকেশন টোকেন (API Key)
                       </div>
-                    </div>
-
-                    {/* Authentication Section */}
-                    <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-md space-y-2">
-                      <h3 className="font-extrabold text-[13px] text-slate-800 flex items-center gap-2">
-                        <Lock size={15} className="text-blue-500" />
-                        অথেনটিকেশন ও পারমিশন
-                      </h3>
-                      <p className="text-slate-600 text-xs leading-relaxed">
-                        আমাদের এপিআই গেটওয়ে ব্যবহার করার জন্য একটি বৈধ <code className="bg-slate-100 px-1 py-0.5 rounded font-mono text-[10.5px] font-bold">key (API Key)</code> প্যারামিটার হিসেবে পাঠাতে হবে। এটি কোয়েরি স্ট্রিং বা পাথ ফরম্যাটে পাস করা যেতে পারে।
+                      <p className="text-slate-600 text-[11px] leading-relaxed">
+                        প্রতিটি রিকোয়েস্টে <code className="bg-slate-100 px-1 py-0.5 rounded font-mono font-bold text-blue-600">key</code> প্যারামিটার পাস করুন। আপনার অ্যাক্টিভ কী: <code className="bg-amber-100 font-mono text-slate-800 px-1.5 py-0.5 rounded select-all font-bold">{apiKey || "YOUR_API_KEY"}</code>
                       </p>
-                      <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-[11px] text-amber-900 font-medium">
-                        👉 <strong>পরামর্শ:</strong> আপনার ব্যক্তিগত এপিআই কীটি হচ্ছে: <code className="bg-amber-100 px-1 py-0.5 rounded font-mono font-bold select-all">{apiKey || "YOUR_API_KEY"}</code> (যা উপরে ইনপুট করা আছে)।
-                      </div>
                     </div>
 
-                    {/* Endpoint List */}
-                    <div className="space-y-4">
-                      <h3 className="font-extrabold text-[13px] text-slate-800 flex items-center gap-2 pl-1">
-                        <Coins size={15} className="text-blue-500" />
-                        এপিআই এন্ডপয়েন্ট সমূহ
-                      </h3>
-
+                    {/* Compact Endpoints */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {/* Endpoint 1 */}
-                      <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-md space-y-3">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 border border-emerald-300 font-mono text-[10px] font-extrabold rounded-lg">GET</span>
-                          <span className="font-mono text-xs font-bold text-slate-850 break-all">{"/v1?key={key}&nid={nid}&dob={dob}"}</span>
+                      <div className="bg-white/90 p-4 rounded-2xl border border-slate-200/60 flex flex-col justify-between shadow-sm">
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 font-mono text-[9px] font-extrabold rounded-md border border-emerald-200">GET</span>
+                            <span className="font-mono text-xs font-bold text-slate-755">/v1</span>
+                          </div>
+                          <p className="text-[11px] leading-relaxed text-slate-600">
+                            এনআইডি এবং জন্ম তারিখ দিয়ে সরাসরি ভোটার বিবরণী ও সচিত্র কপি ডাউনলোড করুন।
+                          </p>
                         </div>
-                        <p className="text-slate-600 text-xs font-medium">
-                          নির্দিষ্ট এনআইডি নম্বর এবং জন্ম তারিখ সহ গ্রাহকের সচিত্র পরিচয় বিবরণী ভেরিফাই করে কপি ডাউনলোড করুন।
-                        </p>
-                        <div className="border-t pt-3 text-xs space-y-1.5 text-slate-500 font-medium">
-                          <div><strong className="text-slate-700">প্যারামিটার ফিল্ডসমূহ:</strong></div>
-                          <ul className="list-disc pl-4 space-y-1 text-[11.5px]">
-                            <li><code className="font-bold font-mono">key</code> (String): আপনার বৈধ ক্লায়েন্ট সিক্রেট টোকেন।</li>
-                            <li><code className="font-bold font-mono">nid</code> (String): ১০, ১৩ অথবা ১৭ ডিজিটের জাতীয় পরিচয়পত্র নম্বর।</li>
-                            <li><code className="font-bold font-mono">dob</code> (String): জন্ম তারিখ <code className="font-mono">YYYY-MM-DD</code> ফরম্যাটে (যেমন: <code className="font-mono">1999-12-31</code>)।</li>
-                          </ul>
+                        <div className="mt-3 pt-2.5 border-t border-slate-100 text-[10px] text-slate-500 font-mono">
+                          Parameters: key, nid, dob
                         </div>
                       </div>
 
                       {/* Endpoint 2 */}
-                      <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-md space-y-3">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2.5 py-0.5 bg-blue-100 text-blue-800 border border-blue-300 font-mono text-[10px] font-extrabold rounded-lg">GET</span>
-                          <span className="font-mono text-xs font-bold text-slate-850 break-all">{"/v1/balance?key={key}"}</span>
+                      <div className="bg-white/90 p-4 rounded-2xl border border-slate-200/60 flex flex-col justify-between shadow-sm">
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 font-mono text-[9px] font-extrabold rounded-md border border-blue-200">GET</span>
+                            <span className="font-mono text-xs font-bold text-slate-755">/v1/balance</span>
+                          </div>
+                          <p className="text-[11px] leading-relaxed text-slate-600">
+                            আপনার এপিআই অ্যাকাউন্টের ক্রেডিট ব্যালেন্স কোয়েরি করুন।
+                          </p>
                         </div>
-                        <p className="text-slate-600 text-xs font-medium">
-                          আপনার অ্যাকাউন্টের বিবরণ এবং অবশিষ্ট ক্রেডিট কোয়েরি ব্যালেন্স চেক করুন।
-                        </p>
-                        <div className="border-t pt-3 text-xs space-y-1 text-slate-500 font-medium">
-                          <div><strong className="text-slate-700">প্যারামিটার ফিল্ডসমূহ:</strong></div>
-                          <ul className="list-disc pl-4 text-[11.5px]">
-                            <li><code className="font-bold font-mono">key</code> (String): আপনার অ্যাকাউন্টের অ্যাক্টিভ এপিআই কী।</li>
-                          </ul>
+                        <div className="mt-3 pt-2.5 border-t border-slate-100 text-[10px] text-slate-500 font-mono">
+                          Parameters: key
                         </div>
                       </div>
-
                     </div>
 
                     {/* Code Snippets Section */}
-                    <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-md space-y-3">
-                      <div className="flex items-center justify-between gap-4 border-b pb-2">
-                        <h4 className="font-extrabold text-[12.5px] text-slate-800">
-                          ইন্টিগ্রেশন কোড জেনারেটর (কোড স্নিপেট)
-                        </h4>
-                        
-                        {/* Language Selector */}
-                        <div className="flex bg-slate-100 p-0.5 rounded-lg text-[10px] font-extrabold">
+                    <div className="bg-white/90 p-4 rounded-2xl border border-slate-200/60 space-y-3 shadow-sm">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <span className="text-xs font-bold text-slate-700">কোড জেনারেটর</span>
+                        {/* Short Language Selector */}
+                        <div className="flex bg-slate-100 p-0.5 rounded-lg text-[10px] font-bold">
                           {(["curl", "node", "python", "php"] as const).map((lang) => (
                             <button
                               key={lang}
                               type="button"
                               onClick={() => setCodeSnippetLang(lang)}
-                              className={`px-2 py-1 rounded-md transition-all cursor-pointer capitalize ${
-                                codeSnippetLang === lang ? "bg-blue-600 text-white" : "text-slate-600 hover:text-slate-950"
+                              className={`px-2 py-0.5 rounded transition-all cursor-pointer capitalize ${
+                                codeSnippetLang === lang ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-800"
                               }`}
                             >
                               {lang === "node" ? "NodeJS" : lang}
@@ -1572,70 +1533,36 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* Display Selected Code Snippet */}
+                      {/* Snippets Area */}
                       <div className="relative">
-                        <pre className="bg-slate-900 text-slate-200 p-4 rounded-xl text-[11.5px] font-mono overflow-x-auto leading-relaxed max-h-[220px]">
+                        <pre className="bg-slate-900 text-slate-300 p-3.5 rounded-xl text-[11px] font-mono overflow-x-auto leading-relaxed max-h-[140px]">
                           {codeSnippetLang === "curl" && (
-`# 1. NID বা ভোটার কার্ডের তথ্য খুঁজুন
+`# ১. সচিত্র ভোটার ডাটা কোয়েরি
 curl -X GET "${window.location.origin}/v1?key=${apiKey || "YOUR_KEY"}&nid=1234567890&dob=2000-01-01"
 
-# 2. অবশিষ্ট ক্রেডিট ব্যালেন্স জানুন
+# ২. ক্রেডিট ব্যালেন্স অনুসন্ধান
 curl -X GET "${window.location.origin}/v1/balance?key=${apiKey || "YOUR_KEY"}"`
                           )}
                           {codeSnippetLang === "node" && (
-`// ১. এনআইডি কার্ডের সচিত্র বিবরণ কোয়েরি করুন
-const apiKey = "${apiKey || "YOUR_KEY"}";
-const nid = "1234567890";
-const dob = "2000-01-01";
-
-fetch("${window.location.origin}/v1?key=" + apiKey + "&nid=" + nid + "&dob=" + dob)
-  .then(res => res.json())
-  .then(data => console.log("NID Data:", data));
-
-// ২. অবশিষ্টাংশ এপিআই ব্যালেন্স চেক
-fetch("${window.location.origin}/v1/balance?key=" + apiKey)
-  .then(res => res.json())
-  .then(data => console.log("Balance Status:", data));`
+`const k = "${apiKey || "YOUR_KEY"}";
+// এনআইডি ডাটা চেক
+fetch("${window.location.origin}/v1?key=" + k + "&nid=1234567890&dob=2000-01-01")
+  .then(r => r.json()).then(console.log);`
                           )}
                           {codeSnippetLang === "python" && (
 `import requests
-
-api_key = "${apiKey || "YOUR_KEY"}"
-nid = "1234567890"
-dob = "2000-01-01"
-
-# ১. ভোটার এনআইডি ডেক তথ্য রিকোয়েস্ট
-url = f"${window.location.origin}/v1?key={api_key}&nid={nid}&dob={dob}"
-response = requests.get(url)
-print("Response JSON:", response.json())
-
-# ২. অবশিষ্ট অ্যাকাউন্ট ক্রেডিট রিকোয়েস্ট
-balance_url = f"${window.location.origin}/v1/balance?key={api_key}"
-balance_response = requests.get(balance_url)
-print("Balance Data:", balance_response.json())`
+url = f"${window.location.origin}/v1?key=${apiKey || "YOUR_KEY"}&nid=1234567890&dob=2000-01-01"
+print(requests.get(url).json())`
                           )}
                           {codeSnippetLang === "php" && (
 `<?php
-$apiKey = "${apiKey || "YOUR_KEY"}";
-$nid = "1234567890";
-$dob = "2000-01-01";
-
-// ১. ভোটার কপি ডাউনলোড কোয়েরি
-$url = "${window.location.origin}/v1?key=" . urlencode($apiKey) . "&nid=" . urlencode($nid) . "&dob=" . urlencode($dob);
-$response = file_get_contents($url);
-$data = json_decode($response, true);
-print_r($data);
-
-// ২. এপিআই ব্যালেন্স গেটওয়ে চেক
-$balanceUrl = "${window.location.origin}/v1/balance?key=" . urlencode($apiKey);
-$balanceResponse = file_get_contents($balanceUrl);
-$balanceData = json_decode($balanceResponse, true);
-print_r($balanceData);
-?>`
+$key = "${apiKey || "YOUR_KEY"}";
+$res = file_get_contents("${window.location.origin}/v1?key=$key&nid=1234567890&dob=2000-01-01");
+print_r(json_decode($res, true));`
                           )}
                         </pre>
 
-                        {/* Copy Code button */}
+                        {/* Beautiful inline copy indicator */}
                         <button
                           type="button"
                           onClick={() => {
@@ -1645,24 +1572,20 @@ print_r($balanceData);
                             if (codeSnippetLang === "curl") {
                               textToCopy = `curl -X GET "${uOrigin}/v1?key=${currentKey}&nid=1234567890&dob=2000-01-01"\ncurl -X GET "${uOrigin}/v1/balance?key=${currentKey}"`;
                             } else if (codeSnippetLang === "node") {
-                              textToCopy = `const apiKey = "${currentKey}";\nconst nid = "1234567890";\nconst dob = "2000-01-01";\n\nfetch("${uOrigin}/v1?key=" + apiKey + "&nid=" + nid + "&dob=" + dob)\n  .then(res => res.json())\n  .then(data => console.log("NID Data:", data));\n\nfetch("${uOrigin}/v1/balance?key=" + apiKey)\n  .then(res => res.json())\n  .then(data => console.log("Balance Status:", data));`;
+                              textToCopy = `const key = "${currentKey}";\nfetch("${uOrigin}/v1?key=" + key + "&nid=1234567890&dob=2000-01-01").then(r => r.json()).then(console.log);`;
                             } else if (codeSnippetLang === "python") {
-                              textToCopy = `import requests\n\napi_key = "${currentKey}"\nnid = "1234567890"\ndob = "2000-01-01"\n\nurl = f"${uOrigin}/v1?key={api_key}&nid={nid}&dob={dob}"\nresponse = requests.get(url)\nprint("Response JSON:", response.json())\n\nbalance_url = f"${uOrigin}/v1/balance?key={api_key}"\nbalance_response = requests.get(balance_url)\nprint("Balance Data:", balance_response.json())`;
+                              textToCopy = `import requests\nurl = f"${uOrigin}/v1?key=${currentKey}&nid=1234567890&dob=2000-01-01"\nprint(requests.get(url).json())`;
                             } else if (codeSnippetLang === "php") {
-                              textToCopy = `<?php\n$apiKey = "${currentKey}";\n$nid = "1234567890";\n$dob = "2000-01-01";\n\n$url = "${uOrigin}/v1?key=" . urlencode($apiKey) . "&nid=" . urlencode($nid) . "&dob=" . urlencode($dob);\n$response = file_get_contents($url);\n$data = json_decode($response, true);\nprint_r($data);\n\n$balanceUrl = "${uOrigin}/v1/balance?key=" . urlencode($apiKey);\n$balanceResponse = file_get_contents($balanceUrl);\n$balanceData = json_decode($balanceResponse, true);\nprint_r($balanceData);\n?>`;
+                              textToCopy = `<?php\n$key = "${currentKey}";\n$res = file_get_contents("${uOrigin}/v1?key=" + key + "&nid=1234567890&dob=2000-01-01");\nprint_r(json_decode($res, true));`;
                             }
-                            // Call native copy
                             navigator.clipboard.writeText(textToCopy);
-                            setCodeSnippetLang(codeSnippetLang);
-                            // Set temporary state for user success
-                            const tempId = "snippet-" + codeSnippetLang;
-                            setCodeSnippetLang(codeSnippetLang);
-                            alert("কোড স্নিপেট ক্লিপবোর্ডে কপি করা হয়েছে!");
+                            setCopiedState(true);
+                            setTimeout(() => setCopiedState(false), 2050);
                           }}
-                          className="absolute right-3.5 top-3.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-stone-200 hover:text-white rounded-lg text-[10px] font-bold border border-slate-700 font-sans cursor-pointer transition flex items-center gap-1 shrink-0"
+                          className="absolute right-2 top-2 px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-stone-300 hover:text-white rounded-md text-[10px] font-bold border border-slate-700 font-sans cursor-pointer transition flex items-center gap-1 shrink-0"
                         >
-                          <Clipboard size={11} />
-                          কোড কপি করুন
+                          <Clipboard size={10} />
+                          {copiedState ? "কপি হয়েছে" : "কপি"}
                         </button>
                       </div>
                     </div>
