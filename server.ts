@@ -1000,27 +1000,30 @@ app.all(["/v1", "/api/v1", /^\/v1\/key=.*/, /^\/api\/v1\/key=.*/], async (req, r
   const durationSec = ((Date.now() - startTime) / 1000).toFixed(2) + "s";
 
   if (querySuccess && responseData) {
-    // Process image CDN upload
+    // Process image CDN upload in background (non-blocking, fallback check)
     const rawPhoto = responseData["data-Info"]?.photo || responseData.photo || "";
-    let imageKitUrl = "";
     if (rawPhoto) {
       try {
-        const jobId = await imageProcessingQueue.addJob(rawPhoto);
-        imageKitUrl = await uploadImageToImageKit(rawPhoto);
-        if (imageKitUrl) {
-          if (responseData.photo !== undefined) responseData.photo = imageKitUrl;
+        // High-speed DB local lookup to see if we already generated a CDN URL for this raw image
+        const existingJob = await db.execute({
+          sql: "SELECT cdn_photo_url FROM image_jobs WHERE raw_photo_url = ? AND status = 'completed' LIMIT 1",
+          args: [rawPhoto]
+        });
+
+        if (existingJob.rows.length > 0 && existingJob.rows[0].cdn_photo_url) {
+          const cachedCdnUrl = existingJob.rows[0].cdn_photo_url as string;
+          console.log(`[CDN Cache Hit] Instantly mapped primary photo to existing ImageKit CDN: ${cachedCdnUrl}`);
+          if (responseData.photo !== undefined) responseData.photo = cachedCdnUrl;
           if (responseData["data-Info"] && responseData["data-Info"].photo !== undefined) {
-            responseData["data-Info"].photo = imageKitUrl;
+            responseData["data-Info"].photo = cachedCdnUrl;
           }
-          if (jobId > 0) {
-            await db.execute({
-              sql: "UPDATE image_jobs SET status = 'completed', cdn_photo_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-              args: [imageKitUrl, jobId]
-            });
-          }
+        } else {
+          // Push to backend queue for background processing (completely non-blocking!)
+          const jobId = await imageProcessingQueue.addJob(rawPhoto);
+          console.log(`[Primary Non-Blocking Queue] Enqueued job #${jobId} for background ImageKit upload.`);
         }
       } catch (uploadErr) {
-        console.error("[Gateway ImageKit] Failed uploading photo:", uploadErr);
+        console.error("[Gateway Queue Checks] Failed non-blocking cdn checks:", uploadErr);
       }
     }
 
@@ -1400,35 +1403,30 @@ app.post("/api/check-nid", async (req, res) => {
 
   // Handle post-query logging and balance deduction
   if (querySuccess && responseData) {
-    // Try uploading retrieved NID photo to ImageKit
-    // Trigger background queue mapping Client -> API Gateway -> Queue (DB jobs) -> Worker -> ImageKit upload -> Database store
+    // Process image CDN upload in background (non-blocking, fallback check)
     const rawPhoto = responseData["data-Info"]?.photo || responseData.photo || "";
-    let imageKitUrl = "";
     if (rawPhoto) {
       try {
-        // Enqueue the job first in the DB for background tracking & durability
-        const jobId = await imageProcessingQueue.addJob(rawPhoto);
-        console.log(`[Backend-Queue] Job #${jobId} enqueued for user photo.`);
+        // High-speed DB local lookup to see if we already generated a CDN URL for this raw image
+        const existingJob = await db.execute({
+          sql: "SELECT cdn_photo_url FROM image_jobs WHERE raw_photo_url = ? AND status = 'completed' LIMIT 1",
+          args: [rawPhoto]
+        });
 
-        // Also do a high-speed inline upload for immediate client feedback if possible
-        imageKitUrl = await uploadImageToImageKit(rawPhoto);
-        if (imageKitUrl) {
-          console.log(`[Backend-ImageKit] Successfully mapped primary photo to ImageKit CDN: ${imageKitUrl}`);
-          if (responseData.photo !== undefined) responseData.photo = imageKitUrl;
+        if (existingJob.rows.length > 0 && existingJob.rows[0].cdn_photo_url) {
+          const cachedCdnUrl = existingJob.rows[0].cdn_photo_url as string;
+          console.log(`[Fallback CDN Cache Hit] Instantly mapped primary photo to existing ImageKit CDN: ${cachedCdnUrl}`);
+          if (responseData.photo !== undefined) responseData.photo = cachedCdnUrl;
           if (responseData["data-Info"] && responseData["data-Info"].photo !== undefined) {
-            responseData["data-Info"].photo = imageKitUrl;
+            responseData["data-Info"].photo = cachedCdnUrl;
           }
-          
-          if (jobId > 0) {
-            // Update the job status in database to completed immediately
-            await db.execute({
-              sql: "UPDATE image_jobs SET status = 'completed', cdn_photo_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-              args: [imageKitUrl, jobId]
-            });
-          }
+        } else {
+          // Push to backend queue for background processing (completely non-blocking!)
+          const jobId = await imageProcessingQueue.addJob(rawPhoto);
+          console.log(`[Fallback Non-Blocking Queue] Enqueued job #${jobId} for background ImageKit upload.`);
         }
       } catch (uploadErr: any) {
-        console.error("[Backend-ImageKit] Failed uploading photo to ImageKit:", uploadErr.message);
+        console.error("[Fallback Queue Checks] Failed non-blocking cdn checks:", uploadErr.message);
       }
     }
 
