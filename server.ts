@@ -1,10 +1,27 @@
 import express from "express";
 import path from "path";
-import { createServer as createViteServer } from "vite";
 import { createClient } from "@libsql/client/web";
 
 const app = express();
 const PORT = 3000;
+
+let isDbInitialized = false;
+async function ensureDb() {
+  if (isDbInitialized) return;
+  isDbInitialized = true;
+  await initDb();
+}
+
+// Guard all requests by lazily awaiting DB setup before execution
+app.use(async (req, res, next) => {
+  try {
+    await ensureDb();
+    next();
+  } catch (err: any) {
+    console.error("Database connection/migration failed inside request middleware:", err);
+    next();
+  }
+});
 
 // Setup Turso LibSQL Database connection
 const db = createClient({
@@ -1688,6 +1705,7 @@ app.get("/api/user/logs", async (req, res) => {
 async function startServer() {
   await initDb();
   if (process.env.NODE_ENV !== "production") {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
@@ -1708,8 +1726,6 @@ async function startServer() {
 
 if (!process.env.VERCEL) {
   startServer();
-} else {
-  initDb();
 }
 
 export default app;
