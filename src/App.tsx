@@ -821,242 +821,142 @@ export default function App() {
           {/* VIEW TAB 5: PRICING & PACKAGES */}
           {activeTab === "pricing" && (
             <>
-              <div id="pricing-system-card" className="w-full bg-[#d0e9fd] rounded-[32px] p-6 md:p-9 shadow-2xl border border-white/50 flex flex-col justify-between self-stretch text-center font-sans no-print animate-fade-in">
+              <div id="pricing-system-card" className="w-full bg-white/90 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-xl border border-white/80 flex flex-col justify-between self-stretch font-sans no-print text-slate-800 animate-fade-in">
                 <div>
                   
                   {/* Header */}
-                  <div className="mb-8">
-                    <span className="bg-blue-600/10 text-blue-800 font-extrabold text-[11px] px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5 border border-blue-500/15 mb-3.5">
-                      <Coins size={12} className="text-amber-500 hover:rotate-12 transition-transform" />
-                      টোকেন রিচার্জ সিস্টেম
+                  <div className="text-center mb-8">
+                    <span className="text-[10px] tracking-widest font-extrabold text-blue-600/85 uppercase bg-blue-50 border border-blue-100 px-2.5 py-0.5 rounded-full inline-block mb-1.5 font-mono">
+                      Token Packages
                     </span>
-                    <h2 className="text-[28px] font-extrabold text-slate-800 tracking-wide flex items-center justify-center gap-2">
-                      টোকেন প্যাকেজ এবং প্রাইসিং প্ল্যানস
+                    <h2 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center gap-1.5">
+                      টোকেন প্যাকেজ ও মূল্য তালিকা
                     </h2>
-                    <p className="text-sm text-slate-600 max-w-2xl mx-auto mt-2 font-medium">
-                      এনআইডি চেক কুয়েরি ও এপিআই সাব-কী ব্যবহার করতে ব্যালেন্স টোকেন প্রয়োজন। আপনার প্রয়োজনীয় প্যাকেজ বেছে নিন।
+                    <p className="text-[11px] text-slate-500 mt-1 max-w-sm mx-auto font-medium">
+                      এনআইডি ভেরিফিকেশন ও এপিআই সাব-কী ব্যবহার করতে প্রয়োজনীয় টোকেন প্যাকেজ সিলেক্ট করুন।
                     </p>
                   </div>
 
                   {/* Pricing Cards Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10 text-left">
-                    
-                    {/* Starter Card */}
-                    <div className="bg-white/70 hover:bg-white/95 border border-white/80 rounded-3xl p-6.5 shadow-xl transition-all hover:translate-y-[-4px] hover:shadow-2xl flex flex-col justify-between duration-300">
-                      <div>
-                        <div className="mb-4">
-                          <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full">স্টার্টার প্লাস</span>
-                        </div>
-                        <h3 className="text-xl font-bold text-slate-800 mb-1">স্টার্টার প্যাকেজ</h3>
-                        <p className="text-xs text-slate-500 mb-4 font-mono font-medium">ব্যক্তিগত ও ট্রায়াল ব্যবহারের জন্য</p>
-                        
-                        <div className="mb-5 flex items-baseline gap-1 bg-blue-50/50 p-3 rounded-2xl border border-blue-500/5">
-                          <span className="text-3xl font-extrabold text-blue-900 font-mono">৳২০০.০০</span>
-                          <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold font-mono">/ ওয়ান-টাইম</span>
-                        </div>
-
-                        <ul className="space-y-2.5 text-xs text-slate-700 font-medium mb-6">
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            <strong className="text-slate-900 font-extrabold">৫০ টোকেন</strong> ব্যালেন্স
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            ১০০% এপিআই এক্সেস (API)
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            বিকাশ/নগদ অটো পেমেন্ট
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            ২৪/৭ লাইভ মেম্বার সাপোর্ট
-                          </li>
-                        </ul>
-                      </div>
-                      
-                      <a 
-                        href={`https://wa.me/8801601519007?text=Hi!+I+want+to+buy+the+Starter+Package+(50+tokens+for+200+BDT).+My+API+Key:+${apiKey}`}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="w-full text-center py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs transition-colors shadow-sm block cursor-pointer border-0"
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 text-left">
+                    {[
+                      {
+                        name: "স্টার্টার প্যাক",
+                        desc: "ব্যক্তিগত বা ট্রায়াল ব্যবহারের জন্য",
+                        tokens: 50,
+                        price: 200,
+                        features: ["৫০ ক্রেডিট ব্যালেন্স", "ইনস্ট্যান্ট এপিআই এক্সেস", "বিকাশ/নগদ পেমেন্ট"],
+                        isPopular: false,
+                        waText: "Hi! I want to buy the Starter Package (50 tokens for 200 BDT)."
+                      },
+                      {
+                        name: "বেসিক প্যাক",
+                        desc: "ক্ষুদ্র ও মাঝারি ব্যবহারের জন্য",
+                        tokens: 100,
+                        price: 380,
+                        features: ["১০০ ক্রেডিট ব্যালেন্স", "দ্রুতগতির কোয়েরি গেটওয়ে", "সার্ভার কপি প্রিন্ট ও পিডিএফ"],
+                        isPopular: false,
+                        waText: "Hi! I want to buy the Basic Package (100 tokens for 380 BDT)."
+                      },
+                      {
+                        name: "প্রিমিয়াম প্যাক",
+                        desc: "সবচেয়ে জনপ্রিয় এবং সেরা পছন্দ",
+                        tokens: 200,
+                        price: 800,
+                        features: ["২০০ ক্রেডিট ব্যালেন্স", "আনলিমিটেড মেয়াদ ভ্যালিডিটি", "অগ্রাধিকার মেম্বার সাপোর্ট"],
+                        isPopular: true,
+                        waText: "Hi! I want to buy the Premium Package (200 tokens for 800 BDT)."
+                      },
+                      {
+                        name: "বিজনেস প্যাক",
+                        desc: "অর্গানাইজেশন ও বড় প্রতিষ্ঠানের জন্য",
+                        tokens: 300,
+                        price: 1000,
+                        features: ["৩০০ ক্রেডিট ব্যালেন্স", "এপিআই ডোমেন অনুমোদন", "ডেডিকেটেড অ্যাকাউন্ট ম্যানেজার"],
+                        isPopular: false,
+                        waText: "Hi! I want to buy the Business Package (300 tokens for 1000 BDT)."
+                      }
+                    ].map((pkg, i) => (
+                      <div 
+                        key={i}
+                        className={`bg-white border rounded-2xl p-5 shadow-xs transition-all hover:shadow-md flex flex-col justify-between ${
+                          pkg.isPopular 
+                            ? "border-blue-500 ring-2 ring-blue-500/10 scale-[1.01]" 
+                            : "border-slate-200/70"
+                        }`}
                       >
-                        প্যাকেজটি কিনুন
-                      </a>
-                    </div>
+                        <div>
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-xs font-bold text-slate-800">{pkg.name}</span>
+                            {pkg.isPopular && (
+                              <span className="bg-blue-600 text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider font-mono">
+                                POPULAR
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[10px] text-slate-450 mb-3">{pkg.desc}</p>
+                          
+                          <div className="mb-4 bg-slate-50/50 p-2 rounded-xl border border-slate-100 flex items-baseline gap-1">
+                            <span className="text-xl font-bold text-slate-800 font-mono">৳{pkg.price}</span>
+                            <span className="text-[8px] text-slate-400 font-bold uppercase tracking-wider font-mono">/ Once</span>
+                          </div>
 
-                    {/* Basic Card */}
-                    <div className="bg-white/70 hover:bg-white/95 border border-white/80 rounded-3xl p-6.5 shadow-xl transition-all hover:translate-y-[-4px] hover:shadow-2xl flex flex-col justify-between duration-300">
-                      <div>
-                        <div className="mb-4">
-                          <span className="bg-indigo-100 text-indigo-850 text-[10px] font-bold px-2.5 py-0.5 rounded-full">জনপ্রিয় চয়েস</span>
+                          <ul className="space-y-1.5 text-[10px] text-slate-600 font-normal mb-5">
+                            {pkg.features.map((feat, fi) => (
+                              <li key={fi} className="flex items-center gap-1.5">
+                                <span className="text-slate-400 font-bold shrink-0">✓</span> 
+                                {feat}
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                        <h3 className="text-xl font-bold text-slate-800 mb-1">বেসিক প্যাকেজ</h3>
-                        <p className="text-xs text-slate-500 mb-4 font-mono font-medium">ক্ষুদ্র ও মাঝারী উদ্যোক্তাদের জন্য</p>
                         
-                        <div className="mb-5 flex items-baseline gap-1 bg-indigo-50/50 p-3 rounded-2xl border border-indigo-500/5">
-                          <span className="text-3xl font-extrabold text-blue-900 font-mono">৳৩৮০.০০</span>
-                          <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold font-mono">/ ওয়ান-টাইম</span>
-                        </div>
-
-                        <ul className="space-y-2.5 text-xs text-slate-700 font-medium mb-6">
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            <strong className="text-slate-900 font-extrabold">১০০ টোকেন</strong> ব্যালেন্স
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            ১০০% এপিআই এক্সেস (API)
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            পিডিএফ সার্ভার কপি প্রিন্ট ও সেভ
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            অগ্রাধিকার ভিত্তিক কুয়েরি সাপোর্ট
-                          </li>
-                        </ul>
+                        <a 
+                          href={`https://wa.me/8801601519007?text=${encodeURIComponent(pkg.waText + " My API Key: " + (apiKey || ""))}`}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className={`w-full text-center py-2 rounded-lg font-bold text-xs transition-all block cursor-pointer border-0 ${
+                            pkg.isPopular
+                              ? "bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+                              : "bg-slate-100 hover:bg-slate-200 text-slate-700"
+                          }`}
+                        >
+                          প্যাকেজটি কিনুন
+                        </a>
                       </div>
-                      
-                      <a 
-                        href={`https://wa.me/8801601519007?text=Hi!+I+want+to+buy+the+Basic+Package+(100+tokens+for+380+BDT).+My+API+Key:+${apiKey}`}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="w-full text-center py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs transition-colors shadow-sm block cursor-pointer border-0"
-                      >
-                        প্যাকেজটি কিনুন
-                      </a>
-                    </div>
-
-                    {/* Premium Card */}
-                    <div className="bg-gradient-to-b from-blue-500/5 to-blue-600/10 white border-2 border-blue-500 rounded-3xl p-6.5 shadow-2xl transition-all hover:translate-y-[-4px] hover:shadow-3xl flex flex-col justify-between duration-300 relative">
-                      <div className="absolute top-0 right-5 -translate-y-1/2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-wider px-3.5 py-1 rounded-full shadow-lg">
-                        সেরা ভ্যালু ⭐
-                      </div>
-                      <div>
-                        <div className="mb-4">
-                          <span className="bg-blue-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">প্রফেশনাল গ্রেড</span>
-                        </div>
-                        <h3 className="text-xl font-bold text-slate-900 mb-1">প্রিমিয়াম প্যাকেজ</h3>
-                        <p className="text-xs text-blue-750 mb-4 font-mono font-medium">নিয়মিত ও কন্টিনিউয়াস চেক করতে</p>
-                        
-                        <div className="mb-5 flex items-baseline gap-1 bg-blue-100/60 p-3 rounded-2xl border border-blue-500/20">
-                          <span className="text-3xl font-extrabold text-blue-900 font-mono">৳৮০০.০০</span>
-                          <span className="text-[10px] text-slate-600 uppercase tracking-wider font-extrabold font-mono">/ ওয়ান-টাইম</span>
-                        </div>
-
-                        <ul className="space-y-2.5 text-xs text-slate-850 font-semibold mb-6">
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            <strong className="text-slate-900 font-extrabold">২০০ টোকেন</strong> ব্যালেন্স
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            ১০০% এপিআই এক্সেস (API)
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            লাইফটাইম আনলিমিটেড ভ্যালিডিটি
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            হাই-স্পিড গেটওয়ে প্রিওরিটি
-                          </li>
-                        </ul>
-                      </div>
-                      
-                      <a 
-                        href={`https://wa.me/8801601519007?text=Hi!+I+want+to+buy+the+Premium+Package+(200+tokens+for+800+BDT).+My+API+Key:+${apiKey}`}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="w-full text-center py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs transition-colors shadow-md block cursor-pointer border-0"
-                      >
-                        প্যাকেজটি কিনুন
-                      </a>
-                    </div>
-
-                    {/* Business Card */}
-                    <div className="bg-white/70 hover:bg-white/95 border border-white/80 rounded-3xl p-6.5 shadow-xl transition-all hover:translate-y-[-4px] hover:shadow-2xl flex flex-col justify-between duration-300">
-                      <div>
-                        <div className="mb-4">
-                          <span className="bg-purple-100 text-purple-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full">এন্টারপ্রাইজ রেডি</span>
-                        </div>
-                        <h3 className="text-xl font-bold text-slate-800 mb-1">বিজনেস প্যাকেজ</h3>
-                        <p className="text-xs text-slate-500 mb-4 font-mono font-medium">বৃহৎ স্কেলিং ব্যবসায়ী প্রতিষ্ঠানের জন্য</p>
-                        
-                        <div className="mb-5 flex items-baseline gap-1 bg-purple-50/50 p-3 rounded-2xl border border-purple-500/5">
-                          <span className="text-3xl font-extrabold text-blue-900 font-mono">৳১,০০০.০০</span>
-                          <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold font-mono">/ ওয়ান-টাইম</span>
-                        </div>
-
-                        <ul className="space-y-2.5 text-xs text-slate-700 font-medium mb-6">
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            <strong className="text-slate-900 font-extrabold">৩০০ টোকেন</strong> ব্যালেন্স
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            ১০০% এপিআই এক্সেস (API)
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            আনলিমিটেড আইপি ও ডোমেইন এক্সেস
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 font-extrabold text-[10px]">✓</span> 
-                            ভিআইপি ডেডিকেটেড ম্যানেজার সাপোর্ট
-                          </li>
-                        </ul>
-                      </div>
-                      
-                      <a 
-                        href={`https://wa.me/8801601519007?text=Hi!+I+want+to+buy+the+Business+Package+(300+tokens+for+1000+BDT).+My+API+Key:+${apiKey}`}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="w-full text-center py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs transition-colors shadow-sm block cursor-pointer border-0"
-                      >
-                        প্যাকেজটি কিনুন
-                      </a>
-                    </div>
-
+                    ))}
                   </div>
 
-                  {/* Responsive Dynamic Token Cost Calculator */}
-                  <div className="bg-white/55 backdrop-blur-md border border-white/65 p-6 rounded-3xl text-left shadow-lg mb-8">
-                    <h3 className="text-lg font-bold text-slate-800 mb-1 flex items-center gap-2">
-                      <Coins size={18} className="text-amber-500 shrink-0" />
-                      কাস্টম টোকেন ও প্রাইস ক্যালকুলেটর
-                    </h3>
-                    <p className="text-xs text-slate-500 mb-5">
-                      আপনি ইচ্ছামত টোকেন সংখ্যা নির্ধারণ করে মূল্য কত হতে পারে তা সহজেই দেখে নিতে পারেন। (বেশি টোকেনে মূল্য হার কম)
-                    </p>
-
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                      <div className="md:col-span-8 flex flex-col gap-3">
-                        <div className="flex justify-between items-center text-xs font-bold text-slate-700 px-1">
-                          <span>প্রয়োজনীয় টোকেন:</span>
-                          <span className="bg-blue-100 text-blue-905 px-3 py-1 rounded-lg text-sm font-mono font-black">{calcTokens} টোকেন</span>
+                  {/* Cost Calculator Section */}
+                  <div className="bg-slate-50/60 border border-slate-200/50 p-5 rounded-2xl shadow-xs mb-6 max-w-xl mx-auto text-left">
+                    <div className="flex items-center gap-1.5 mb-2.5">
+                      <Coins size={14} className="text-slate-500" />
+                      <h3 className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">কাস্টম টোকেন ক্যালকুলেটর</h3>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center">
+                      <div className="sm:col-span-8 flex flex-col gap-1.5">
+                        <div className="flex justify-between items-center text-xs text-slate-600 font-medium px-0.5">
+                          <span>প্রয়োজনীয় টোকেন সংখ্যা:</span>
+                          <span className="bg-slate-200/85 font-mono font-bold text-xs text-slate-800 px-2.5 py-0.5 rounded-md">{calcTokens} Tokens</span>
                         </div>
                         <input 
                           type="range" 
                           min={20} 
                           max={1000} 
-                          step={10}
+                          step={20}
                           value={calcTokens}
                           onChange={(e) => setCalcTokens(Number(e.target.value))}
-                          className="w-full h-2 bg-blue-100 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                          className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-605"
                         />
-                        <div className="flex justify-between text-[10px] text-slate-400 px-1 font-semibold">
-                          <span>২০ টোকেন</span>
-                          <span>৫০০ টোকেন</span>
-                          <span>১০০০ টোকেন</span>
+                        <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                          <span>২০ Tokens</span>
+                          <span>৫০০ Tokens</span>
+                          <span>১,০০০ Tokens</span>
                         </div>
                       </div>
-
-                      <div className="md:col-span-4 bg-[#ecf6ff] rounded-2xl p-4.5 border border-blue-200/50 flex flex-col justify-center text-center">
-                        <span className="text-[11px] uppercase tracking-wider font-extrabold text-blue-800/85 mb-1.5 font-mono">আনুমানিক সর্বমোট মূল্য</span>
-                        <h4 className="text-3xl font-black text-slate-800 mb-0.5 font-mono">
+                      <div className="sm:col-span-4 bg-white border border-slate-200/60 rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-xs">
+                        <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">আনুমানিক মূল্য BDT</span>
+                        <span className="text-lg font-extrabold text-slate-800 font-mono">
                           ৳{(() => {
                             let r = 4.0;
                             if (calcTokens >= 300) r = 3.33;
@@ -1064,69 +964,67 @@ export default function App() {
                             else if (calcTokens >= 100) r = 3.9;
                             return Math.round(calcTokens * r);
                           })()}
-                        </h4>
-                        <span className="text-[10px] text-slate-500 font-bold">
+                        </span>
+                        <span className="text-[9px] text-slate-400 font-medium font-mono">
                           ৳{(() => {
                             if (calcTokens >= 300) return "3.33";
                             if (calcTokens >= 200) return "3.80";
                             if (calcTokens >= 100) return "3.90";
                             return "4.00";
-                          })()} প্রতি টোকেন রেট
+                          })()} / Token Rate
                         </span>
                         
                         <a 
-                          href={`https://wa.me/8801601519007?text=Hi!+I+want+to+generate+a+custom+volume+of+${calcTokens}+tokens.+Please+quote+me.+My+API+Key:+${apiKey}`}
+                          href={`https://wa.me/8801601519007?text=${encodeURIComponent("Hi! I want to purchase custom volume of " + calcTokens + " tokens. My API Key: " + (apiKey || ""))}`}
                           target="_blank"
                           rel="noreferrer noopener"
-                          className="mt-3.5 w-full text-center py-2 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-xl font-bold text-xs hover:from-teal-700 hover:to-emerald-700 transition-all shadow-sm block cursor-pointer border-0"
+                          className="mt-2.5 w-full text-center py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-bold text-[11px] transition-all block cursor-pointer border-0"
                         >
-                          এই পরিমাণ রিকোয়েষ্ট করুন
+                          পেমেন্ট রিকোয়েস্ট
                         </a>
                       </div>
                     </div>
                   </div>
 
                   {/* Payment and Manual Top-up Instructions */}
-                  <div className="bg-amber-500/5 border border-amber-500/20 rounded-3xl p-6.5 text-left flex flex-col lg:flex-row gap-6 relative">
+                  <div className="bg-white border border-slate-200/80 rounded-2xl p-5 text-left flex flex-col lg:flex-row gap-5 relative shadow-xs">
                     <div className="flex-1">
-                      <h4 className="text-base font-bold text-amber-850 mb-2.5 flex items-center gap-1.5 font-sans">
-                        <span className="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+                      <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                        <span className="inline-block w-2 h-2 rounded-full bg-slate-400"></span>
                         উদ্বৃত্ত ব্যালেন্স যুক্ত করার নিয়মাবলী
                       </h4>
-                      <ol className="text-xs text-slate-700 space-y-2 pl-4 list-decimal font-medium leading-relaxed">
+                      <ol className="text-[11px] text-slate-500 space-y-1.5 pl-4 list-decimal font-normal leading-relaxed">
                         <li>
-                          নিচের যেকোনো পার্সোনাল বিকাশ বা নগদ পেমেন্ট নম্বরে ওপরের পেমেন্ট অ্যামাউন্ট <strong className="text-slate-900">সেন্ড মানি (Send Money)</strong> করুন।
+                          নিচের যেকোনো বিকাশ বা নগদ পার্সোনাল নাম্বারে কাঙ্ক্ষিত প্যাকেজের মূল্য <strong className="text-slate-700 font-semibold">সেন্ড মানি (Send Money)</strong> করুন।
                         </li>
                         <li>
-                          টাকা পাঠানোর পর প্রদেয় পেমেন্ট <span className="text-[#3b82f6] font-bold">ট্রানজেকশন আইডি (Transaction ID)</span> এবং আপনার এপিআই কী (API Key (<span className="font-mono font-extrabold">{apiKey}</span>)) কপি করুণ।
+                          টাকা পাঠানোর পর প্রদেয় পেমেন্টের <span className="text-blue-600 font-semibold">ট্রানজেকশন আইডি (Transaction ID)</span> এবং আপনার এপিআই কী (<span className="font-mono font-bold text-slate-700">{apiKey}</span>) কপি করুন।
                         </li>
                         <li>
-                          নিচের যেকোনো যোগাযোগ লিঙ্কে (হোয়াটসঅ্যাপ বা টেলিগ্রাম) ট্রান্সফার ডিটেইলস চ্যাট মেসেজ আকারে সেন্ড করুন। ৫ মিনিটের মধ্যে আপনার অ্যাকাউন্টে ব্যালেন্স যোগ হয়ে যাবে।
+                          নিচের যেকোনো সাপোর্ট লিঙ্কে (হোয়াটসঅ্যাপ বা টেলিগ্রাম) পেমেন্টের সম্পূর্ণ ডিটেইলস চ্যাট মেসেজ আকারে পাঠিয়ে দিন। ৫ মিনিটের মধ্যে ব্যালেন্স যুক্ত হয়ে যাবে।
                         </li>
                       </ol>
                     </div>
 
-                    <div className="lg:w-[320px] bg-white rounded-2xl p-4.5 shadow-sm border border-amber-500/10 shrink-0 flex flex-col gap-3 font-mono">
-                      <span className="text-[10px] uppercase font-black tracking-widest text-[#d97706] mb-1">পেমেন্ট গেটওয়ে চ্যানেল (Personal)</span>
+                    <div className="lg:w-[280px] bg-slate-50 border border-slate-200/60 rounded-xl p-4 shrink-0 flex flex-col gap-2.5 font-mono text-[11px]">
+                      <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 mb-0.5">পেমেন্ট গেটওয়ে চ্যানেল (Personal)</span>
                       
-                      <div className="flex items-center justify-between border-b border-dashed border-slate-100 pb-2">
-                        <span className="text-xs font-bold text-slate-600">বিকাশ (bKash)</span>
+                      <div className="flex items-center justify-between border-b border-dashed border-slate-200 pb-1.5">
+                        <span className="font-bold text-slate-600">বিকাশ (bKash)</span>
                         <div className="text-right">
-                          <span className="text-xs font-black text-slate-800">০১৬০১-৫১৯০০৭</span>
-                          <span className="text-[9px] bg-amber-150 text-amber-800 px-1.5 py-0.2 rounded block mt-0.5">পার্সোনাল</span>
+                          <span className="font-bold text-slate-800">০১৬০১-৫১৯০০৭</span>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-600">নগদ (Nagad)</span>
+                      <div className="flex items-center justify-between pb-0.5">
+                        <span className="font-bold text-slate-600">নগদ (Nagad)</span>
                         <div className="text-right">
-                          <span className="text-xs font-black text-slate-800">০১৬০১-৫১৯০০৭</span>
-                          <span className="text-[9px] bg-amber-150 text-amber-800 px-1.5 py-0.2 rounded block mt-0.5">পার্সোনাল</span>
+                          <span className="font-bold text-slate-800">০১৬০১-৫১৯০০৭</span>
                         </div>
                       </div>
 
-                      <div className="mt-2 text-center">
-                        <span className="text-[10px] text-slate-400 font-sans font-semibold">মার্জিন চার্জ প্রযোজ্য নয়</span>
+                      <div className="mt-1 text-center text-[9px] text-slate-400 font-sans">
+                         অতিরিক্ত কোনো ফি বা চার্জ প্রযোজ্য নয়
                       </div>
                     </div>
                   </div>
@@ -1134,77 +1032,78 @@ export default function App() {
                 </div>
 
                 {/* Bottom Short Text Button */}
-                <div className="mt-6 flex flex-col items-center gap-4 text-xs font-bold text-blue-900/75 no-print">
-                  <div className="flex flex-wrap items-center justify-center gap-2">
-                    <button
-                      onClick={() => {
-                        changeTabAndPath("lookup");
-                      }}
-                      className="hover:text-blue-950 underline transition-all cursor-pointer flex items-center gap-1 bg-transparent border-0 py-1 px-4 hover:bg-white/30 rounded-lg"
-                    >
-                      <Search size={14} />
-                      এনআইডি চেকে ফিরে যান
-                    </button>
-                    <span className="opacity-30">|</span>
-                    <button
-                      onClick={() => {
-                        changeTabAndPath("history");
-                        fetchUserLogs(apiKey);
-                      }}
-                      className="hover:text-blue-950 underline transition-all cursor-pointer flex items-center gap-1 bg-transparent border-0 py-1 px-4 hover:bg-white/30 rounded-lg"
-                    >
-                      <History size={14} />
-                      আমার হিস্ট্রি
-                    </button>
-                    <span className="opacity-30">|</span>
-                    <button
-                      onClick={() => {
-                        changeTabAndPath("docs");
-                      }}
-                      className="hover:text-blue-950 underline transition-all cursor-pointer flex items-center gap-1 bg-transparent border-0 py-1 px-4 hover:bg-white/30 rounded-lg"
-                    >
-                      <Info size={14} />
-                      এপিআই ডকুমেন্টেশন
-                    </button>
-                  </div>
-
+                <div className="mt-6 flex flex-col items-center gap-4 text-xs font-medium text-slate-505 no-print">
+                  
                   {/* Contact support channels */}
-                  <div className="w-full bg-[#d0e9fd] rounded-2xl p-4 shadow-md border border-white/40 mt-1 text-left flex flex-col gap-2.5">
-                    <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider pl-1 font-sans flex items-center gap-1.5">
-                      <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                      যোগাযোগ ও হেল্পডেস্ক সাপোর্ট
+                  <div className="w-full bg-slate-50/50 rounded-xl p-4 border border-slate-200/50 text-left flex flex-col gap-2">
+                    <span className="text-[10px] font-bold text-slate-505 uppercase tracking-wider pl-0.5 font-sans flex items-center gap-1.5">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      सहযোগিতা প্রয়োজন? আমাদের হেল্পডেস্কে যোগাযোগ করুন:
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       <a 
                         href="http://wa.me/+8801601519007" 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="flex items-center gap-2 px-3 py-2 bg-green-600/10 hover:bg-green-600/20 text-green-800 border border-green-600/20 rounded-xl transition-all font-bold text-[11px]"
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-lg transition-all font-semibold text-[10px]"
                       >
-                        <MessageSquare size={13} className="text-green-600 shrink-0" />
+                        <MessageSquare size={12} className="text-emerald-500 shrink-0" />
                         হোয়াটসঅ্যাপ পার্সোনাল
                       </a>
                       <a 
                         href="https://t.me/MrTools_BD" 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="flex items-center gap-2 px-3 py-2 bg-blue-600/10 hover:bg-blue-600/20 text-blue-800 border border-blue-600/20 rounded-xl transition-all font-bold text-[11px]"
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-lg transition-all font-semibold text-[10px]"
                       >
-                        <MessageSquare size={13} className="text-blue-600 shrink-0" />
+                        <MessageSquare size={12} className="text-blue-500 shrink-0" />
                         টেলিগ্রাম সাপোর্ট
                       </a>
                       <a 
                         href="https://chat.whatsapp.com/LIZFWhn5Xir2nr4B3NwlA5" 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="flex items-center gap-2 px-3 py-2 bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-800 border border-emerald-600/20 rounded-xl transition-all font-bold text-[11px]"
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-lg transition-all font-semibold text-[10px]"
                       >
-                        <Users size={13} className="text-emerald-600 shrink-0" />
-                        হোয়াটসঅ্যাপ কমিউনিটি
+                        <Users size={12} className="text-emerald-500 shrink-0" />
+                        হোয়াটসঅ্যাপ গ্রুপ
                       </a>
                     </div>
                   </div>
 
+                  {/* Navigation Links */}
+                  <div className="flex flex-wrap items-center justify-center gap-1 mt-1 text-[11px]">
+                    <button
+                      onClick={() => {
+                        changeTabAndPath("lookup");
+                      }}
+                      className="hover:text-slate-800 transition-all cursor-pointer flex items-center gap-1 bg-transparent border-0 py-1 px-4 hover:bg-slate-100 rounded-lg text-slate-550 font-bold"
+                    >
+                      <Search size={12} />
+                      এনআইডি চেকে ফিরে যান
+                    </button>
+                    <span className="opacity-20 text-slate-400">|</span>
+                    <button
+                      onClick={() => {
+                        changeTabAndPath("history");
+                        fetchUserLogs(apiKey);
+                      }}
+                      className="hover:text-slate-800 transition-all cursor-pointer flex items-center gap-1 bg-transparent border-0 py-1 px-4 hover:bg-slate-100 rounded-lg text-slate-550 font-bold"
+                    >
+                      <History size={12} />
+                      আমার হিস্ট্রি
+                    </button>
+                    <span className="opacity-20 text-slate-400">|</span>
+                    <button
+                      onClick={() => {
+                        changeTabAndPath("docs");
+                      }}
+                      className="hover:text-slate-800 transition-all cursor-pointer flex items-center gap-1 bg-transparent border-0 py-1 px-4 hover:bg-slate-100 rounded-lg text-slate-550 font-bold"
+                    >
+                      <Info size={12} />
+                      এপিআই ডকুমেন্টেশন
+                    </button>
+                  </div>
                 </div>
               </div>
             </>
