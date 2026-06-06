@@ -532,9 +532,9 @@ export default function App() {
     }
     if (!photoVal.startsWith("http://") && !photoVal.startsWith("https://") && !photoVal.startsWith("data:")) {
       const cleanPath = photoVal.replace(/^[\.\/]+/g, "");
-      return `/image?u=${encodeURIComponent(`https://zero.nid-servercopy.com/${cleanPath}`)}`;
+      return `/image?u=${encodeURIComponent(`https://api.nid-servercopy.com/${cleanPath}`)}`;
     }
-    if (photoVal.includes("zero.nid-servercopy.com")) {
+    if (photoVal.includes("api.nid-servercopy.com") || photoVal.includes("zero.nid-servercopy.com")) {
       return `/image?u=${encodeURIComponent(photoVal)}`;
     }
     return photoVal;

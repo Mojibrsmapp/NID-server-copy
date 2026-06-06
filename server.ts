@@ -83,6 +83,28 @@ async function initDb() {
     // Seed default developer admin keys if they do not exist
     const initialAdminKey = process.env.ADMIN_KEY || "ADMIN_SECRET_KEY";
     
+    // Safety purge conflicting rows before seeding to ensure unique constraint compliance
+    try {
+      await db.execute({
+        sql: "DELETE FROM users WHERE username = ? AND api_key != ?",
+        args: ["system_v1_admin", "32vhhhg"]
+      });
+      await db.execute({
+        sql: "DELETE FROM users WHERE api_key = ? AND username != ?",
+        args: ["32vhhhg", "system_v1_admin"]
+      });
+      await db.execute({
+        sql: "DELETE FROM users WHERE username = ? AND api_key != ?",
+        args: ["system_default", initialAdminKey]
+      });
+      await db.execute({
+        sql: "DELETE FROM users WHERE api_key = ? AND username != ?",
+        args: [initialAdminKey, "system_default"]
+      });
+    } catch (purgeErr: any) {
+      console.warn("Could not purge conflicting seeds, proceeding:", purgeErr.message);
+    }
+    
     // Ensure "32vhhhg" is registered and active in DB as admin
     const check32vhhhg = await db.execute({
       sql: "SELECT * FROM users WHERE api_key = ?",
@@ -215,8 +237,8 @@ function parseNidHtml(html: string): any {
   if (rawPhoto) {
     if (!rawPhoto.startsWith("http://") && !rawPhoto.startsWith("https://") && !rawPhoto.startsWith("data:")) {
       const cleanPath = rawPhoto.replace(/^[\.\/]+/g, "");
-      rawPhoto = `/image?u=${encodeURIComponent(`https://zero.nid-servercopy.com/${cleanPath}`)}`;
-    } else if (rawPhoto.startsWith("https://zero.nid-servercopy.com/")) {
+      rawPhoto = `/image?u=${encodeURIComponent(`https://api.nid-servercopy.com/${cleanPath}`)}`;
+    } else if (rawPhoto.startsWith("https://api.nid-servercopy.com/") || rawPhoto.startsWith("https://zero.nid-servercopy.com/")) {
       rawPhoto = `/image?u=${encodeURIComponent(rawPhoto)}`;
     }
   }
@@ -340,14 +362,14 @@ function sanitizeString(str: string): string {
     return str;
   }
   
-  if (str.includes("zero.nid-servercopy.com")) {
+  if (str.includes("api.nid-servercopy.com") || str.includes("zero.nid-servercopy.com")) {
     return `/image?u=${encodeURIComponent(str)}`;
   }
   if (str.includes("/api/photo-proxy")) {
     const matchPath = str.match(/path=([^&]+)/);
     if (matchPath) {
       const decoded = decodeURIComponent(matchPath[1]);
-      return `/image?u=${encodeURIComponent(`https://zero.nid-servercopy.com/${decoded}`)}`;
+      return `/image?u=${encodeURIComponent(`https://api.nid-servercopy.com/${decoded}`)}`;
     }
     const matchUrl = str.match(/url=([^&]+)/);
     if (matchUrl) {
@@ -357,7 +379,7 @@ function sanitizeString(str: string): string {
   }
   if (str.startsWith("uploads/") || str.startsWith("/uploads/")) {
     const cleanPath = str.replace(/^[\.\/]+/g, "");
-    return `/image?u=${encodeURIComponent(`https://zero.nid-servercopy.com/${cleanPath}`)}`;
+    return `/image?u=${encodeURIComponent(`https://api.nid-servercopy.com/${cleanPath}`)}`;
   }
   return str;
 }
@@ -408,7 +430,7 @@ async function uploadImageToImageKit(rawSrc: string): Promise<string> {
         const matchPath = targetUrl.match(/[?&]path=([^&]+)/);
         if (matchPath) {
           const decodedPath = decodeURIComponent(matchPath[1]);
-          targetUrl = `https://zero.nid-servercopy.com/${decodedPath}`;
+          targetUrl = `https://api.nid-servercopy.com/${decodedPath}`;
           found = true;
         }
       }
@@ -419,7 +441,7 @@ async function uploadImageToImageKit(rawSrc: string): Promise<string> {
   }
 
   if (!targetUrl.startsWith("http://") && !targetUrl.startsWith("https://") && !targetUrl.startsWith("data:")) {
-    targetUrl = `https://zero.nid-servercopy.com/${targetUrl.replace(/^[\.\/]+/g, "")}`;
+    targetUrl = `https://api.nid-servercopy.com/${targetUrl.replace(/^[\.\/]+/g, "")}`;
   }
 
   try {
@@ -427,7 +449,7 @@ async function uploadImageToImageKit(rawSrc: string): Promise<string> {
     const imgResponse = await fetch(targetUrl, {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        "Referer": "https://zero.nid-servercopy.com/"
+        "Referer": "https://api.nid-servercopy.com/"
       }
     });
 
@@ -618,13 +640,13 @@ const imageProcessingQueue = new ImageProcessingQueue();
 // Proxy image requests to hide upstream developer server source
 app.get("/api/photo-proxy", async (req, res) => {
   const { path: photoPath, url: photoUrl, u: photoU } = req.query;
-  const target = (photoPath ? `https://zero.nid-servercopy.com/${photoPath}` : ((photoUrl || photoU) as string)) || "";
+  const target = (photoPath ? `https://api.nid-servercopy.com/${photoPath}` : ((photoUrl || photoU) as string)) || "";
   if (!target) {
     return res.status(400).send("Invalid image source.");
   }
   
   let targetUrl = target;
-
+ 
   // Recursively unwrap/extract URL if it has been double-encoded or self-referenced
   while (targetUrl.includes("/image?") || targetUrl.includes("/api/photo-proxy")) {
     let found = false;
@@ -641,7 +663,7 @@ app.get("/api/photo-proxy", async (req, res) => {
         const matchPath = targetUrl.match(/[?&]path=([^&]+)/);
         if (matchPath) {
           const decodedPath = decodeURIComponent(matchPath[1]);
-          targetUrl = `https://zero.nid-servercopy.com/${decodedPath}`;
+          targetUrl = `https://api.nid-servercopy.com/${decodedPath}`;
           found = true;
         }
       }
@@ -652,14 +674,14 @@ app.get("/api/photo-proxy", async (req, res) => {
   }
 
   if (!targetUrl.startsWith("http://") && !targetUrl.startsWith("https://")) {
-    targetUrl = `https://zero.nid-servercopy.com/${targetUrl.replace(/^[\.\/]+/g, "")}`;
+    targetUrl = `https://api.nid-servercopy.com/${targetUrl.replace(/^[\.\/]+/g, "")}`;
   }
 
   try {
     const fetchResponse = await fetch(targetUrl, {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        "Referer": "https://zero.nid-servercopy.com/"
+        "Referer": "https://api.nid-servercopy.com/"
       }
     });
     if (!fetchResponse.ok) {
@@ -895,11 +917,11 @@ app.all(["/v1", "/api/v1", /^\/v1\/key=.*/, /^\/api\/v1\/key=.*/], async (req, r
     console.warn("Gateway cache lookup failed, moving directly to live upstream:", cacheErr.message);
   }
 
-  // Master upstream key to interact with zero.nid-servercopy.com
-  const masterUpstreamKey = "32vhhhg";
+  // Master upstream key to interact with api.nid-servercopy.com
+  const masterUpstreamKey = "trial_test";
 
   // 1. Primary Attempt: Query the modern supreme sv.php live endpoint
-  const svUrl = `https://zero.nid-servercopy.com/sv.php?key=${encodeURIComponent(masterUpstreamKey)}&nid=${encodeURIComponent(nid)}&dob=${encodeURIComponent(dob)}`;
+  const svUrl = `https://api.nid-servercopy.com/sv.php?key=${encodeURIComponent(masterUpstreamKey)}&nid=${encodeURIComponent(nid)}&dob=${encodeURIComponent(dob)}`;
   console.log(`[Gateway Primary] Fetching live data from sv.php: ${svUrl}`);
 
   let querySuccess = false;
@@ -937,7 +959,7 @@ app.all(["/v1", "/api/v1", /^\/v1\/key=.*/, /^\/api\/v1\/key=.*/], async (req, r
 
   // 2. Legacy Fallback Mode
   if (!querySuccess) {
-    const targetUrl = `https://zero.nid-servercopy.com/server-copyv1.php`;
+    const targetUrl = `https://api.nid-servercopy.com/server-copyv1.php`;
     console.log(`[Gateway Secondary] Fallback to ${targetUrl}...`);
 
     try {
@@ -1118,7 +1140,7 @@ app.get("/image", async (req, res) => {
         const matchPath = targetUrl.match(/[?&]path=([^&]+)/);
         if (matchPath) {
           const decodedPath = decodeURIComponent(matchPath[1]);
-          targetUrl = `https://zero.nid-servercopy.com/${decodedPath}`;
+          targetUrl = `https://api.nid-servercopy.com/${decodedPath}`;
           found = true;
         }
       }
@@ -1129,14 +1151,14 @@ app.get("/image", async (req, res) => {
   }
 
   if (!targetUrl.startsWith("http://") && !targetUrl.startsWith("https://")) {
-    targetUrl = `https://zero.nid-servercopy.com/${targetUrl.replace(/^[\.\/]+/g, "")}`;
+    targetUrl = `https://api.nid-servercopy.com/${targetUrl.replace(/^[\.\/]+/g, "")}`;
   }
 
   try {
     const fetchResponse = await fetch(targetUrl, {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        "Referer": "https://zero.nid-servercopy.com/"
+        "Referer": "https://api.nid-servercopy.com/"
       }
     });
 
@@ -1278,11 +1300,11 @@ app.post("/api/check-nid", async (req, res) => {
     console.warn("Cache lookup query failed slightly, moving directly to live upstream:", cacheErr.message);
   }
 
-  // Master upstream key to interact with zero.nid-servercopy.com
-  const masterUpstreamKey = "32vhhhg";
+  // Master upstream key to interact with api.nid-servercopy.com
+  const masterUpstreamKey = "trial_test";
 
   // 1. Primary Attempt: Query the modern supreme sv.php live endpoint
-  const svUrl = `https://zero.nid-servercopy.com/sv.php?key=${encodeURIComponent(masterUpstreamKey)}&nid=${encodeURIComponent(nid)}&dob=${encodeURIComponent(dob)}`;
+  const svUrl = `https://api.nid-servercopy.com/sv.php?key=${encodeURIComponent(masterUpstreamKey)}&nid=${encodeURIComponent(nid)}&dob=${encodeURIComponent(dob)}`;
   console.log(`[Primary] Fetching live data from sv.php: ${svUrl}`);
 
   let querySuccess = false;
@@ -1323,7 +1345,7 @@ app.post("/api/check-nid", async (req, res) => {
   // 2. Legacy Secondary Fallback Mode
   if (!querySuccess) {
     const scriptName = version === "V2" ? "server-copyv2.php" : "server-copyv1.php";
-    const targetUrl = `https://zero.nid-servercopy.com/${scriptName}`;
+    const targetUrl = `https://api.nid-servercopy.com/${scriptName}`;
     console.log(`[Secondary] Running legacy fallback query to ${targetUrl}...`);
 
     try {
